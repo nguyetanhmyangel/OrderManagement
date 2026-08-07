@@ -6,4 +6,16 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <Folder Include="Orders\" />
+    <Folder Include="Products\" />
+    <Folder Include="Promotions\" />
+    <Folder Include="Vouchers\" />
+    <Folder Include="Warehouses\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\OrderManagement.SharedKernel\OrderManagement.SharedKernel.csproj" />
+  </ItemGroup>
+
 </Project>
