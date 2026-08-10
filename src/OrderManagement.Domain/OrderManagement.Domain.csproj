@@ -7,15 +7,11 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Orders\" />
-    <Folder Include="Products\" />
-    <Folder Include="Promotions\" />
-    <Folder Include="Vouchers\" />
-    <Folder Include="Warehouses\" />
+    <ProjectReference Include="..\OrderManagement.SharedKernel\OrderManagement.SharedKernel.csproj" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\OrderManagement.SharedKernel\OrderManagement.SharedKernel.csproj" />
+    <Folder Include="Repositories\" />
   </ItemGroup>
 
 </Project>

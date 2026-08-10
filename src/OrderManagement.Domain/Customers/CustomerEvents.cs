@@ -3,8 +3,6 @@ using OrderManagement.SharedKernel;
 
 namespace OrderManagement.Domain.Customers;
 
-//public sealed record TodoItemCreatedDomainEvent(Guid TodoItemId) : IDomainEvent;
-
 public sealed record CustomerCreatedEvent(
     Guid CustomerId,
     string Email,

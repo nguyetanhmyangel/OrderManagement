@@ -1,4 +1,3 @@
-
 using OrderManagement.SharedKernel;
 
 namespace OrderManagement.Domain.Customers;

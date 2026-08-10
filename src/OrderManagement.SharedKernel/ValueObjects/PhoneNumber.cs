@@ -6,27 +6,54 @@ namespace OrderManagement.SharedKernel.ValueObjects;
 /// <summary>
 /// Value Object for validated phone numbers (Vietnam-focused).
 /// </summary>
-public sealed record PhoneNumber
+public sealed class PhoneNumber : ValueObject
 {
     public string Value { get; }
 
-    private PhoneNumber(string value) => Value = value;
+    private PhoneNumber(string value)
+    {
+        Value = value;
+    }
 
     public static PhoneNumber Create(string phone)
     {
         if (string.IsNullOrWhiteSpace(phone))
-            throw new DomainException("Số điện thoại không được để trống.");
+            throw new DomainException(
+                "Số điện thoại không được để trống.");
 
-        var cleaned = Regex.Replace(phone, @"[\s\-\.\(\)]", "");
+        var normalized = Normalize(phone);
 
-        // Accept +84... or 0...
-        if (!Regex.IsMatch(cleaned, @"^(\+84|0)[3|5|7|8|9]\d{8}$"))
-            throw new DomainException("Số điện thoại không hợp lệ (định dạng Việt Nam).");
+        if (!IsValidVietnamesePhone(normalized))
+            throw new DomainException(
+                "Số điện thoại không hợp lệ.");
 
-        return new PhoneNumber(cleaned);
+        return new PhoneNumber(normalized);
     }
 
-    public override string ToString() => Value;
+    private static string Normalize(string phone)
+    {
+        return Regex.Replace(
+            phone.Trim(),
+            @"[\s\-\.\(\)]",
+            string.Empty);
+    }
 
-    public static implicit operator string(PhoneNumber phone) => phone.Value;
+    private static bool IsValidVietnamesePhone(string phone)
+    {
+        return Regex.IsMatch(
+            phone,
+            @"^(?:\+84|0)[35789]\d{8}$");
+    }
+
+    protected override IEnumerable<object?> GetEqualityComponents()
+    {
+        yield return Value;
+    }
+
+    public override string ToString()
+        => Value;
+
+    public static implicit operator string(
+        PhoneNumber phone)
+        => phone.Value;
 }
