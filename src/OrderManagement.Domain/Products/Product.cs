@@ -1,5 +1,6 @@
 using OrderManagement.Domain.Customers;
 using OrderManagement.SharedKernel;
+using OrderManagement.SharedKernel.ValueObjects;
 
 namespace OrderManagement.Domain.Products;
 
@@ -8,7 +9,7 @@ namespace OrderManagement.Domain.Products;
 /// Owns: ProductImage.
 /// References (Id only): Category, Brand.
 /// </summary>
-public sealed class Product : Entity, IAggregateRoot
+public sealed class Product : Entity<Guid>, IAggregateRoot
 {
     public string Sku { get; private set; } = null!;
     public string Name { get; private set; } = null!;

@@ -1,5 +1,5 @@
-using OrderManagement.Domain.Categories;
 using OrderManagement.SharedKernel;
+using OrderManagement.SharedKernel.ValueObjects;
 
 namespace OrderManagement.Domain.Categories;
 
@@ -7,7 +7,7 @@ namespace OrderManagement.Domain.Categories;
 public sealed class Category : Entity<Guid>, IAggregateRoot
 {
     public string Name { get; private set; } = null!;
-    public string Slug { get; private set; } = null!;
+    public Slug Slug { get; private set; } = null!;
     public string? Description { get; private set; }
     public Guid? ParentCategoryId { get; private set; }
     public int DisplayOrder { get; private set; }
@@ -17,7 +17,7 @@ public sealed class Category : Entity<Guid>, IAggregateRoot
 
     private Category() { }
 
-    private Category(Guid id, string name, string slug, string? description,
+    private Category(Guid id, string name, Slug slug, string? description,
         Guid? parentCategoryId, int displayOrder, bool isActive,
         DateTime createAt, DateTime? updateAt) : base(id)
     {
@@ -42,7 +42,7 @@ public sealed class Category : Entity<Guid>, IAggregateRoot
         {
             Id = Guid.NewGuid(),
             Name = name.Trim(),
-            Slug = GenerateSlug(name),
+            Slug = Slug.FromName(name),
             Description = description?.Trim(),
             ParentCategoryId = parentCategoryId,
             DisplayOrder = displayOrder,
@@ -58,7 +58,7 @@ public sealed class Category : Entity<Guid>, IAggregateRoot
         if (string.IsNullOrWhiteSpace(name))
             throw new DomainException(CategoryErrors.NameRequired.Description);
         Name = name.Trim();
-        Slug = GenerateSlug(name);
+        Slug = Slug.FromName(name);
         Description = description?.Trim();
         DisplayOrder = displayOrder;
         UpdatedAt = DateTime.UtcNow;

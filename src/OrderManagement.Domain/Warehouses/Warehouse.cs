@@ -4,7 +4,7 @@ using OrderManagement.SharedKernel.ValueObjects;
 namespace OrderManagement.Domain.Warehouses;
 
 /// <summary>Aggregate Root — Warehouse.</summary>
-public sealed class Warehouse : Entity, IAggregateRoot
+public sealed class Warehouse : Entity<Guid>, IAggregateRoot
 {
     public string Code { get; private set; } = null!;
     public string Name { get; private set; } = null!;
@@ -15,6 +15,17 @@ public sealed class Warehouse : Entity, IAggregateRoot
     public DateTime? UpdatedAt { get; private set; }
 
     private Warehouse() { }
+
+    private Warehouse(Guid id, string code, string name, Address address, bool isActive, bool isDefault,
+        DateTime createdAt) : base(id)
+    {
+        Code = code;
+        Name = name;
+        Address = address;
+        IsActive = isActive;
+        IsDefault = isDefault;
+        CreatedAt = createdAt;
+    }
 
     public static Warehouse Create(string code, string name, Address address, bool isDefault = false)
     {

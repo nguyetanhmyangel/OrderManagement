@@ -1,11 +1,10 @@
-
-
 namespace OrderManagement.SharedKernel.ValueObjects;
 
 /// <summary>
 /// Rich Value Object representing monetary value.
 /// Immutable, currency-aware, and self-validating.
 /// </summary>
+
 public sealed class Money : ValueObject
 {
     public decimal Amount { get; }
@@ -25,40 +24,46 @@ public sealed class Money : ValueObject
         string currency)
     {
         if (amount < 0)
+        {
             throw new DomainException(
                 "Số tiền không thể âm.");
+        }
 
         if (string.IsNullOrWhiteSpace(currency))
+        {
             throw new DomainException(
                 "Currency không được để trống.");
+        }
 
         var normalizedCurrency =
             currency.Trim().ToUpperInvariant();
 
         if (normalizedCurrency.Length != 3)
+        {
             throw new DomainException(
                 "Currency code phải có 3 ký tự " +
                 "theo chuẩn ISO 4217.");
+        }
 
-        return new Money(
+        var normalizedAmount =
             Math.Round(
                 amount,
                 2,
-                MidpointRounding.AwayFromZero),
+                MidpointRounding.AwayFromZero);
+
+        return new Money(
+            normalizedAmount,
             normalizedCurrency);
     }
 
-    public static Money Zero =>
-        new(0m, "VND");
+    public static Money ZeroOf(string currency)
+        => Create(0m, currency);
 
-    public static Money ZeroOf(string currency) =>
-        Create(0m, currency);
+    public static Money FromVND(decimal amount)
+        => Create(amount, "VND");
 
-    public static Money FromVND(decimal amount) =>
-        Create(amount, "VND");
-
-    public static Money FromUSD(decimal amount) =>
-        Create(amount, "USD");
+    public static Money FromUSD(decimal amount)
+        => Create(amount, "USD");
 
     public Money Add(Money other)
     {
@@ -77,20 +82,24 @@ public sealed class Money : ValueObject
 
         EnsureSameCurrency(other);
 
-        var result = Amount - other.Amount;
-
-        if (result < 0)
+        if (other.Amount > Amount)
+        {
             throw new DomainException(
                 "Kết quả phép trừ không thể âm.");
+        }
 
-        return Create(result, Currency);
+        return Create(
+            Amount - other.Amount,
+            Currency);
     }
 
     public Money Multiply(decimal factor)
     {
         if (factor < 0)
+        {
             throw new DomainException(
                 "Hệ số nhân không thể âm.");
+        }
 
         return Create(
             Amount * factor,
@@ -100,8 +109,10 @@ public sealed class Money : ValueObject
     public Money Percentage(decimal percent)
     {
         if (percent < 0 || percent > 100)
+        {
             throw new DomainException(
                 "Phần trăm phải nằm trong khoảng 0–100.");
+        }
 
         return Multiply(percent / 100m);
     }
@@ -115,6 +126,15 @@ public sealed class Money : ValueObject
         return Amount > other.Amount;
     }
 
+    public bool IsGreaterThanOrEqual(Money other)
+    {
+        ArgumentNullException.ThrowIfNull(other);
+
+        EnsureSameCurrency(other);
+
+        return Amount >= other.Amount;
+    }
+
     public bool IsLessThan(Money other)
     {
         ArgumentNullException.ThrowIfNull(other);
@@ -122,6 +142,15 @@ public sealed class Money : ValueObject
         EnsureSameCurrency(other);
 
         return Amount < other.Amount;
+    }
+
+    public bool IsLessThanOrEqual(Money other)
+    {
+        ArgumentNullException.ThrowIfNull(other);
+
+        EnsureSameCurrency(other);
+
+        return Amount <= other.Amount;
     }
 
     public bool IsZero =>
@@ -168,3 +197,4 @@ public sealed class Money : ValueObject
     public override string ToString()
         => $"{Amount:N2} {Currency}";
 }
+

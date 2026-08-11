@@ -1,4 +1,4 @@
-namespace OrderManagement.Domain.Enums;
+namespace OrderManagement.Domain.ReturnOrders;
 
 public enum ReturnStatus
 {

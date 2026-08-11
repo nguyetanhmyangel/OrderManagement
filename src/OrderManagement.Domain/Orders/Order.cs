@@ -67,10 +67,10 @@ public sealed class Order : Entity<Guid>, IAggregateRoot
             CustomerEmail = customerEmail,
             ShippingAddress = shippingAddress,
             Status = OrderStatus.Draft,
-            SubtotalAmount = Money.Zero,
-            DiscountAmount = Money.Zero,
-            ShippingFee = Money.Zero,
-            TotalAmount = Money.Zero,
+            SubtotalAmount = Money.ZeroOf("VND"),
+            DiscountAmount = Money.ZeroOf("VND"),
+            ShippingFee = Money.ZeroOf("VND"),
+            TotalAmount = Money.ZeroOf("VND"),
             CreatedAt = DateTime.UtcNow
         };
 

@@ -4,9 +4,8 @@ using OrderManagement.SharedKernel;
 namespace OrderManagement.Domain.Products;
 
 /// <summary>Entity owned by Product Aggregate.</summary>
-public sealed class ProductImage : Entity
+public sealed class ProductImage : Entity<Guid>
 {
-    public Guid Id { get; private init; }
     public Guid ProductId { get; private set; }
     public string Url { get; private set; } = null!;
     public string? AltText { get; private set; }
@@ -15,6 +14,17 @@ public sealed class ProductImage : Entity
     public DateTime CreatedAt { get; private set; }
 
     private ProductImage() { }
+
+    private ProductImage(Guid id, Guid productId, string url, string? altText,
+        int displayOrder, bool isPrimary) : base(id)
+    {
+        ProductId = productId;
+        Url = url;
+        AltText = altText;
+        DisplayOrder = displayOrder;
+        IsPrimary = isPrimary;
+        CreatedAt = DateTime.UtcNow;
+    }
 
     internal static ProductImage Create(
         Guid productId, string url, string? altText = null,

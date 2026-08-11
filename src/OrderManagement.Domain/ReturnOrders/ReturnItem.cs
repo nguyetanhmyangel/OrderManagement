@@ -1,13 +1,14 @@
 using OrderManagement.Domain.Customers;
 using OrderManagement.SharedKernel;
+using OrderManagement.SharedKernel.ValueObjects;
 
-namespace OrderManagement.Domain.Entities;
+namespace OrderManagement.Domain.ReturnOrders;
 
 /// <summary>
 /// Entity owned by ReturnOrder Aggregate.
 /// References OrderItem / Product by Id + snapshot.
 /// </summary>
-public sealed class ReturnItem : Entity
+public sealed class ReturnItem : Entity<Guid>
 {
     public Guid ReturnOrderId { get; private set; }
     public Guid OrderItemId { get; private set; }
@@ -22,6 +23,20 @@ public sealed class ReturnItem : Entity
     public Money RefundAmount => UnitPrice.Multiply(Quantity);
 
     private ReturnItem() { }
+
+    private ReturnItem(Guid id, Guid returnOrderId, Guid orderItemId, Guid productId,
+        string productName, int quantity, Money unitPrice,
+        string? reason, bool isReceived) : base(id)
+    {
+        ReturnOrderId = returnOrderId;
+        OrderItemId = orderItemId;
+        ProductId = productId;
+        ProductName = productName;
+        Quantity = quantity;
+        UnitPrice = unitPrice;
+        Reason = reason;
+        IsReceived = isReceived;
+    }
 
     internal static ReturnItem Create(
         Guid returnOrderId, Guid orderItemId, Guid productId,

@@ -1,8 +1,5 @@
-using OrderManagement.Domain.Customers;
-using OrderManagement.Domain.Entities;
-using OrderManagement.Domain.Enums;
-using OrderManagement.Domain.ReturnOrders;
 using OrderManagement.SharedKernel;
+using OrderManagement.SharedKernel.ValueObjects;
 
 namespace OrderManagement.Domain.ReturnOrders;
 
@@ -11,7 +8,7 @@ namespace OrderManagement.Domain.ReturnOrders;
 /// Owns: ReturnItem, Refund.
 /// References Order / Customer / Payment by Id only.
 /// </summary>
-public sealed class ReturnOrder : Entity, IAggregateRoot
+public sealed class ReturnOrder : Entity<Guid>, IAggregateRoot
 {
     public Guid OrderId { get; private set; }
     public Guid CustomerId { get; private set; }
@@ -33,6 +30,16 @@ public sealed class ReturnOrder : Entity, IAggregateRoot
 
     private ReturnOrder() { }
 
+    private ReturnOrder(Guid id, Guid orderId, Guid customerId, string? reason) : base(id)
+    {
+        OrderId = orderId;
+        CustomerId = customerId;
+        Status = ReturnStatus.Requested;
+        Reason = reason;
+        TotalRefundAmount = Money.ZeroOf("VND");
+        RequestedAt = DateTime.UtcNow;
+    }
+
     public static ReturnOrder Create(Guid orderId, Guid customerId, string? reason = null)
     {
         var ro = new ReturnOrder
@@ -42,7 +49,7 @@ public sealed class ReturnOrder : Entity, IAggregateRoot
             CustomerId = customerId,
             Status = ReturnStatus.Requested,
             Reason = reason,
-            TotalRefundAmount = Money.Zero,
+            TotalRefundAmount = Money.ZeroOf("VND"),
             RequestedAt = DateTime.UtcNow
         };
 
@@ -133,7 +140,7 @@ public sealed class ReturnOrder : Entity, IAggregateRoot
 
     private void RecalculateTotal()
     {
-        TotalRefundAmount = _items.Aggregate(Money.Zero, (sum, i) => sum.Add(i.RefundAmount));
+        TotalRefundAmount = _items.Aggregate(Money.ZeroOf("VND"), (sum, i) => sum.Add(i.RefundAmount));
     }
 
     private void EnsureModifiable()

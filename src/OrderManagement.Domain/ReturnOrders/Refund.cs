@@ -1,6 +1,6 @@
-using OrderManagement.Domain.Customers;
 using OrderManagement.Domain.Enums;
 using OrderManagement.SharedKernel;
+using OrderManagement.SharedKernel.ValueObjects;
 
 namespace OrderManagement.Domain.ReturnOrders;
 
@@ -8,7 +8,7 @@ namespace OrderManagement.Domain.ReturnOrders;
 /// Entity owned by ReturnOrder Aggregate.
 /// Payment / Order referenced by Id only.
 /// </summary>
-public sealed class Refund : Entity
+public sealed class Refund : Entity<Guid>
 {
     public Guid ReturnOrderId { get; private set; }
     public Guid PaymentId { get; private set; }
@@ -22,6 +22,18 @@ public sealed class Refund : Entity
     public DateTime? UpdatedAt { get; private set; }
 
     private Refund() { }
+
+    private Refund(Guid id, Guid returnOrderId, Guid paymentId, Guid orderId,
+        Money amount, RefundStatus status, string? reason, DateTime createdAt) : base(id)
+    {
+        ReturnOrderId = returnOrderId;
+        PaymentId = paymentId;
+        OrderId = orderId;
+        Amount = amount;
+        Status = status;
+        Reason = reason;
+        CreatedAt = createdAt;
+    }
 
     internal static Refund Create(
         Guid returnOrderId, Guid paymentId, Guid orderId,

@@ -43,6 +43,7 @@ public sealed class Brand :  Entity<Guid>, IAggregateRoot
         {
             Id = Guid.NewGuid(),
             Name = name.Trim(),
+            Slug = Slug.FromName(name),
             Description = description?.Trim(),
             LogoUrl = logoUrl,
             Website = website,
