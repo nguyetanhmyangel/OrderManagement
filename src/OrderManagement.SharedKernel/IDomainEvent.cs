@@ -1,3 +1,8 @@
 ﻿namespace OrderManagement.SharedKernel;
 
-public interface IDomainEvent;
+// Interface đánh dấu Domain Event
+public interface IDomainEvent
+{
+    Guid EventId { get; }
+    DateTime OccurredOnUtc { get; }
+}

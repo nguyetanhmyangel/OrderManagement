@@ -10,8 +10,4 @@
     <ProjectReference Include="..\OrderManagement.SharedKernel\OrderManagement.SharedKernel.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Repositories\" />
-  </ItemGroup>
-
 </Project>
