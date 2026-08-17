@@ -7,22 +7,22 @@ public sealed record ProductCreatedEvent(
     string Sku,
     string Name,
     decimal Price,
-    string Currency) : IDomainEvent;
+    string Currency) : DomainEvent;
 
 public sealed record ProductPriceChangedEvent(
     Guid ProductId,
     decimal OldPrice,
     decimal NewPrice,
-    string Currency) : IDomainEvent;
+    string Currency) : DomainEvent;
 
 public sealed record ProductDeactivatedEvent(
-    Guid ProductId) : IDomainEvent;
+    Guid ProductId) : DomainEvent;
 
 public sealed record ProductActivatedEvent(
-    Guid ProductId) : IDomainEvent;
+    Guid ProductId) : DomainEvent;
 
 public sealed record ProductImageAddedEvent(
     Guid ProductId,
     Guid ImageId,
     string Url,
-    bool IsPrimary) : IDomainEvent;
+    bool IsPrimary) : DomainEvent;

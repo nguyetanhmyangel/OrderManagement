@@ -1,25 +1,21 @@
 ﻿namespace OrderManagement.SharedKernel;
 
-public abstract class Entity<TKey> where TKey : notnull
+public abstract class Entity<TKey> : IEntity where TKey : notnull
 {
     public TKey Id { get; protected set; }
 
-    protected Entity(TKey id)
-    {
-        Id = id;
-    }
-
+    protected Entity(TKey id) { Id = id; }
     protected Entity() { } // Dành cho Dapper/ORM
 
     private readonly List<IDomainEvent> _domainEvents = new();
-    public IReadOnlyCollection<IDomainEvent> DomainEvents => _domainEvents.AsReadOnly();
 
+    // Triển khai từ IEntity
+    public IReadOnlyCollection<IDomainEvent> DomainEvents => _domainEvents.AsReadOnly();
     protected void RaiseDomainEvent(IDomainEvent domainEvent) => _domainEvents.Add(domainEvent);
     public void ClearDomainEvents() => _domainEvents.Clear();
 
     public override bool Equals(object? obj)
     {
-
         if (obj is not Entity<TKey> other) return false;
         if (ReferenceEquals(this, other)) return true;
         if (GetType() != other.GetType()) return false;

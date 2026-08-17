@@ -6,4 +6,4 @@ public sealed record PromotionCreatedEvent(
     Guid PromotionId,
     string Name,
     DateTime ValidFrom,
-    DateTime ValidTo) : IDomainEvent;
+    DateTime ValidTo) : DomainEvent;

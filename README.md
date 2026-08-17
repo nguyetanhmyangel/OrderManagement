@@ -23,3 +23,13 @@ dotnet sln add src/OrderManagement.Infrastructure/OrderManagement.Infrastructure
 dotnet sln add src/OrderManagement.Api/OrderManagement.Api.csproj
 
 ```
+
+# Use Milan Jovanovic's clean architecture template and add...
+
+- SharedKernel: DomainException,IAggregateRoot,DomainEventBase
+- Domain: BaseSpecification,ISpecification,IRepository
+- Application: IDomainEventsDispatcher, DomainEventsDispatcher
+
+
+
+

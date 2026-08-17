@@ -8,38 +8,38 @@ public sealed record InventoryStockInEvent(
     Guid ProductId,
     Guid WarehouseId,
     int Quantity,
-    int QuantityAfter) : IDomainEvent;
+    int QuantityAfter) : DomainEvent;
 
 public sealed record InventoryStockOutEvent(
     Guid InventoryId,
     Guid ProductId,
     Guid WarehouseId,
     int Quantity,
-    int QuantityAfter) : IDomainEvent;
+    int QuantityAfter) : DomainEvent;
 
 public sealed record InventoryReservedEvent(
     Guid InventoryId,
     Guid ProductId,
     Guid WarehouseId,
     int Quantity,
-    int QuantityAvailableAfter) : IDomainEvent;
+    int QuantityAvailableAfter) : DomainEvent;
 
 public sealed record InventoryReservationReleasedEvent(
     Guid InventoryId,
     Guid ProductId,
     Guid WarehouseId,
-    int Quantity) : IDomainEvent;
+    int Quantity) : DomainEvent;
 
 public sealed record InventoryLowStockEvent(
     Guid InventoryId,
     Guid ProductId,
     Guid WarehouseId,
     int QuantityAvailable,
-    int ReorderLevel) : IDomainEvent;
+    int ReorderLevel) : DomainEvent;
 
 public sealed record InventoryAdjustedEvent(
     Guid InventoryId,
     Guid ProductId,
     Guid WarehouseId,
     int QuantityBefore,
-    int QuantityAfter) : IDomainEvent;
+    int QuantityAfter) : DomainEvent;
