@@ -2,7 +2,9 @@
 
 namespace OrderManagement.Application.Abstractions.DomainEvents;
 
-public interface IDomainEventDispatcher
+public interface IDomainEventsDispatcher
 {
-    Task DispatchAsync(IReadOnlyCollection<IDomainEvent> domainEvents, CancellationToken cancellationToken = default);
+    Task DispatchAsync(
+        IDomainEvent domainEvent,
+        CancellationToken cancellationToken = default);
 }

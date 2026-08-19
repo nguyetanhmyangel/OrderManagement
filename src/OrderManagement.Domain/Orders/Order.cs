@@ -33,7 +33,8 @@ public sealed class Order : Entity<Guid>, IAggregateRoot
     public DateTime? PlacedAt { get; private set; }
     public DateTime? CancelledAt { get; private set; }
     public string? CancellationReason { get; private set; }
-    public byte[] RowVersion { get; private set; } = [];
+    // Concurrency token
+    public uint Version { get; private set; }   // chỉ cần khai báo, không cần [Timestamp], vì cấu hình Fluent API
 
     public IReadOnlyList<OrderItem> Items => _items.AsReadOnly();
     public IReadOnlyList<OrderStatusHistory> StatusHistory => _statusHistory.AsReadOnly();

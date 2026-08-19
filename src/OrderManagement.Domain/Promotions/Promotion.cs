@@ -23,7 +23,8 @@ public sealed class Promotion : Entity<Guid> , IAggregateRoot
     public bool IsActive { get; private set; }
     public DateTime CreatedAt { get; private set; }
     public DateTime? UpdatedAt { get; private set; }
-
+    // Concurrency token
+    public uint Version { get; private set; }   // chỉ cần khai báo, không cần [Timestamp], vì cấu hình Fluent API
     // Cross-AR filters — Id only
     public Guid? ApplicableCategoryId { get; private set; }
     public Guid? ApplicableBrandId { get; private set; }

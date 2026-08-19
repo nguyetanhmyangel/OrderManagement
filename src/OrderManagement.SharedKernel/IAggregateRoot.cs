@@ -6,5 +6,5 @@
 /// </summary>
 public interface IAggregateRoot
 {
-    // Thường để trống (Marker Interface)
+    // (Marker Interface)
 }

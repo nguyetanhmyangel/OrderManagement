@@ -27,7 +27,8 @@ public sealed class Voucher : Entity<Guid>, IAggregateRoot
 
     public bool IsActive { get; private set; }
     public DateTime CreatedAt { get; private set; }
-
+    // Concurrency token
+    public uint Version { get; private set; }   // chỉ cần khai báo, không cần [Timestamp], vì cấu hình Fluent API
     private Voucher() { }
 
     private Voucher(Guid id,

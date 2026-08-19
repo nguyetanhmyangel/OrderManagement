@@ -2,7 +2,7 @@ using System.Linq.Expressions;
 
 namespace OrderManagement.Domain.Specifications;
 
-public abstract class BaseSpecification<T>(Expression<Func<T, bool>> criteria) : ISpecification.ISpecification<T>
+public abstract class BaseSpecification<T>(Expression<Func<T, bool>> criteria) : ISpecification<T>
 {
     public Expression<Func<T, bool>> Criteria { get; } = criteria;
     public List<Expression<Func<T, object>>> Includes { get; } = [];

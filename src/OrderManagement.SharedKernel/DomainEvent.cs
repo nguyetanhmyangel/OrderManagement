@@ -1,7 +1,6 @@
 ﻿namespace OrderManagement.SharedKernel;
 
-public abstract record DomainEvent : IDomainEvent
+public abstract record DomainEvent(Guid EventId, DateTime OccurredOnUtc) : IDomainEvent
 {
-    public Guid EventId { get; init; } = Guid.NewGuid();
-    public DateTime OccurredOnUtc { get; init; } = DateTime.UtcNow;
+    protected DomainEvent() : this(Guid.NewGuid(), DateTime.UtcNow) { }
 }

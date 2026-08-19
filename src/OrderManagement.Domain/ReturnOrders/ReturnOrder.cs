@@ -21,6 +21,8 @@ public sealed class ReturnOrder : Entity<Guid>, IAggregateRoot
     public DateTime? ReceivedAt { get; private set; }
     public DateTime? CompletedAt { get; private set; }
     public DateTime? UpdatedAt { get; private set; }
+    // Concurrency token
+    public uint Version { get; private set; }   // chỉ cần khai báo, không cần [Timestamp], vì cấu hình Fluent API
 
     private readonly List<ReturnItem> _items = [];
     public IReadOnlyList<ReturnItem> Items => _items.AsReadOnly();

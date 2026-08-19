@@ -27,6 +27,8 @@ public sealed class Product : Entity<Guid>, IAggregateRoot
     public bool IsFeatured { get; private set; }
     public DateTime CreatedAt { get; private set; }
     public DateTime? UpdatedAt { get; private set; }
+    // Concurrency token
+    public uint Version { get; private set; }   // chỉ cần khai báo, không cần [Timestamp], vì cấu hình Fluent API
 
     private readonly List<ProductImage> _images = [];
     public IReadOnlyList<ProductImage> Images => _images.AsReadOnly();

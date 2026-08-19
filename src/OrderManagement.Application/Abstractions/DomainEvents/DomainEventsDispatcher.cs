@@ -1,32 +1,46 @@
 ﻿using System.Collections.Concurrent;
-using OrderManagement.SharedKernel;
 using Microsoft.Extensions.DependencyInjection;
+using OrderManagement.SharedKernel;
 
 namespace OrderManagement.Application.Abstractions.DomainEvents;
-public sealed class DomainEventDispatcher(IServiceProvider serviceProvider) : IDomainEventDispatcher
+
+public sealed class DomainEventsDispatcher(
+    IServiceProvider serviceProvider) : IDomainEventsDispatcher
 {
     private static readonly ConcurrentDictionary<Type, Type> HandlerTypeCache = new();
 
-    public async Task DispatchAsync(IReadOnlyCollection<IDomainEvent> domainEvents, CancellationToken cancellationToken = default)
+    public async Task DispatchAsync(
+        IDomainEvent domainEvent,
+        CancellationToken cancellationToken = default)
     {
-        if (domainEvents.Count == 0) return;
+        ArgumentNullException.ThrowIfNull(domainEvent);
 
-        foreach (var domainEvent in domainEvents)
+        var eventType = domainEvent.GetType();
+
+        var handlerType = HandlerTypeCache.GetOrAdd(
+            eventType,
+            static type => typeof(IDomainEventHandler<>)
+                .MakeGenericType(type));
+
+        var handlers = serviceProvider.GetServices(handlerType);
+
+        var handleMethod = handlerType.GetMethod(
+            nameof(IDomainEventHandler<IDomainEvent>.Handle));
+
+        if (handleMethod is null)
         {
-            var eventType = domainEvent.GetType();
-            var handlerType = HandlerTypeCache.GetOrAdd(eventType, t => typeof(IDomainEventHandler<>).MakeGenericType(t));
+            throw new InvalidOperationException(
+                $"Không tìm thấy Handle method cho handler type '{handlerType}'.");
+        }
 
-            var handlers = serviceProvider.GetServices(handlerType);
+        foreach (var handler in handlers)
+        {
+            if (handler is null)
+                continue;
 
-            foreach (var handler in handlers)
-            {
-                if (handler is null) continue;
-                var method = handlerType.GetMethod("HandleAsync");
-                if (method is not null)
-                {
-                    await (Task)method.Invoke(handler, new object[] { domainEvent, cancellationToken })!;
-                }
-            }
+            await (Task)handleMethod.Invoke(
+                handler,
+                [domainEvent, cancellationToken])!;
         }
     }
 }

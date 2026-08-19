@@ -17,7 +17,8 @@ public sealed class Inventory : Entity<Guid>, IAggregateRoot
     public int ReorderLevel { get; private set; }
     public int ReorderQuantity { get; private set; }
     public DateTime UpdatedAt { get; private set; }
-
+    // Concurrency token
+    public uint Version { get; private set; }   // chỉ cần khai báo, không cần [Timestamp], vì cấu hình Fluent API
     public int QuantityAvailable => QuantityOnHand - QuantityReserved;
     public bool IsLowStock => QuantityAvailable <= ReorderLevel;
     public bool IsOutOfStock => QuantityAvailable <= 0;
